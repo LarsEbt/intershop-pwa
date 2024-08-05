@@ -673,6 +673,7 @@
   "checkout.addresses.checkout_as_guest.heading": "Check out as guest",
   "checkout.addresses.email.label": "E-mail address",
   "checkout.addresses.heading": "Addresses",
+  "checkout.addresses.heading.anonymous": "Login or create an account",
   "checkout.addresses.no_Selection.error": "Please specify your invoice and shipping address to continue checkout.",
   "checkout.addresses.no_Selection.invoice.error": "Please select or enter an invoice address.",
   "checkout.addresses.no_Selection.shipping.error": "Please select or enter a shipping address.",

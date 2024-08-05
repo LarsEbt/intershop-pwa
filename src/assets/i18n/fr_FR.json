@@ -673,6 +673,7 @@
   "checkout.addresses.checkout_as_guest.heading": "Acheter en tant que visiteur",
   "checkout.addresses.email.label": "Courriel",
   "checkout.addresses.heading": "Adresses",
+  "checkout.addresses.heading.anonymous": "Se connecter ou créer un nouveau compte",
   "checkout.addresses.no_Selection.error": "Veuillez spécifier votre adresse de facturation et de livraison pour poursuivre le paiement.",
   "checkout.addresses.no_Selection.invoice.error": "Veuillez sélectionner ou saisir une adresse de facturation.",
   "checkout.addresses.no_Selection.shipping.error": "Veuillez sélectionner ou saisir une adresse de livraison.",

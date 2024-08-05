@@ -673,6 +673,7 @@
   "checkout.addresses.checkout_as_guest.heading": "Als Gast kaufen",
   "checkout.addresses.email.label": "E-Mail-Adresse",
   "checkout.addresses.heading": "Adressen",
+  "checkout.addresses.heading.anonymous": "Anmelden oder neues Konto anlegen",
   "checkout.addresses.no_Selection.error": "Bitte geben Sie Ihre Rechnungs- und Lieferadresse an, um fortzufahren.",
   "checkout.addresses.no_Selection.invoice.error": "Wählen Sie eine Rechnungsadresse aus oder geben Sie eine ein.",
   "checkout.addresses.no_Selection.shipping.error": "Wählen Sie eine Lieferadresse aus oder geben Sie eine ein.",
