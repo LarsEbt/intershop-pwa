@@ -78,6 +78,8 @@ export class RegistrationFormConfigurationService {
         props: {
           fieldsetClass: 'row',
           childClass: 'col-md-10 col-lg-8 col-xl-6',
+          legend: 'account.register.address.headding',
+          legendClass: 'legend-invisible',
         },
         fieldGroup: [
           {
@@ -237,6 +239,8 @@ export class RegistrationFormConfigurationService {
         props: {
           fieldsetClass: 'row',
           childClass: 'col-md-10 col-lg-8 col-xl-6',
+          legend: 'account.register.email_password.heading',
+          legendClass: 'legend-invisible',
         },
         validators: {
           validation: [
@@ -318,6 +322,8 @@ export class RegistrationFormConfigurationService {
         props: {
           fieldsetClass: 'row',
           childClass: 'col-md-10 col-lg-8 col-xl-6',
+          legend: 'account.register.personal_information.heading',
+          legendClass: 'legend-invisible',
         },
         fieldGroup: this.fieldLibrary.getConfigurationGroup('personalInfo'),
       },
@@ -339,6 +345,8 @@ export class RegistrationFormConfigurationService {
         props: {
           fieldsetClass: 'row',
           childClass: 'col-md-10 col-lg-8 col-xl-6',
+          legend: 'account.register.company_information.heading',
+          legendClass: 'legend-invisible',
         },
         fieldGroup: this.fieldLibrary.getConfigurationGroup('companyInfo'),
       },
