@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 import { SpecialValidators } from 'ish-shared/forms/validators/special-validators';
 
 /**
@@ -79,6 +80,7 @@ export class UpdatePasswordFormComponent implements OnInit {
     if (this.updatePasswordForm.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.updatePasswordForm);
+      FormsService.focusFirstInvalidFieldRecursive(this.updatePasswordForm);
       return;
     }
 

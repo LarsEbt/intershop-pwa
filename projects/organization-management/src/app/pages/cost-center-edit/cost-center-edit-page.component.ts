@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { CostCenter, CostCenterBase } from 'ish-core/models/cost-center/cost-center.model';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 import { OrganizationManagementFacade } from '../../facades/organization-management.facade';
 
@@ -30,6 +31,7 @@ export class CostCenterEditPageComponent implements OnInit {
     if (this.form.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.form);
+      FormsService.focusFirstInvalidFieldRecursive(this.form);
       return;
     }
 

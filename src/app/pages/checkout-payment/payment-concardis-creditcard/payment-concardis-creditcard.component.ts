@@ -6,6 +6,7 @@ import { range } from 'lodash-es';
 import { SelectOption } from 'ish-core/models/select-option/select-option.model';
 import { ScriptLoaderService } from 'ish-core/utils/script-loader/script-loader.service';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 import { ConcardisErrorMessageType, PaymentConcardisComponent } from '../payment-concardis/payment-concardis.component';
 
@@ -142,6 +143,7 @@ export class PaymentConcardisCreditcardComponent extends PaymentConcardisCompone
     if (this.parameterForm.invalid) {
       this.formSubmitted = true;
       markAsDirtyRecursive(this.parameterForm);
+      FormsService.focusFirstInvalidFieldRecursive(this.parameterForm);
     }
 
     this.resetErrors();

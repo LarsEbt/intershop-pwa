@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Store, select } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, OperatorFunction, forkJoin } from 'rxjs';
@@ -51,6 +52,50 @@ export class FormsService {
       // keep-localization-pattern: ^account\.costcenter\.budget\.period\.value.*
       label: `account.costcenter.budget.period.value.${period}`,
     }));
+  }
+
+  /**
+   * Set focus on the first invalid field in a form.
+   * Has to be of type InputField, SelectElement or TextArea.
+   *
+   * @param form The form group to check for invalid fields.
+   * @param formId Optional id of the form to search for the first invalid field. Necessary if multiple form fields on one page have duplicate keys.
+   */
+  static focusFirstInvalidFieldRecursive(form: FormGroup, formId?: string) {
+    // iterate over all form controls and check if they are invalid
+    for (const key of Object.keys(form.controls)) {
+      const control = form.get(key);
+
+      if (control && control.invalid) {
+        // recursively check nested FormGroup
+        if (control instanceof FormGroup) {
+          FormsService.focusFirstInvalidFieldRecursive(control, formId);
+          break;
+        } else {
+          let element: HTMLElement;
+
+          // TODO: The formId is a workaround and should be fixed by having unique keys in the checkout-address-anonymous-form.component.html form
+          // TODO: Find a way to set the focus via Angular by accessing an ElementRef/NativeElement and calling focus() on it
+          if (formId) {
+            const formToSearch = document.getElementById(formId);
+            element = formToSearch.querySelector(`[id^='formly_'][id*='${key}']`);
+          } else {
+            element = document.querySelector(`[id^='formly_'][id*='${key}']`);
+          }
+
+          if (
+            element &&
+            (element instanceof HTMLInputElement ||
+              element instanceof HTMLSelectElement ||
+              element instanceof HTMLTextAreaElement)
+          ) {
+            (element as HTMLElement).focus();
+            // break after the first element with an error is focused
+            break;
+          }
+        }
+      }
+    }
   }
 
   /**

@@ -7,6 +7,7 @@ import { map, shareReplay, startWith } from 'rxjs/operators';
 import { AccountFacade } from 'ish-core/facades/account.facade';
 import { Contact } from 'ish-core/models/contact/contact.model';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 import { ContactUsFacade } from '../../../facades/contact-us.facade';
 
@@ -130,6 +131,7 @@ export class ContactFormComponent implements OnInit {
       this.request.emit(this.contactForm.value);
     } else {
       markAsDirtyRecursive(this.contactForm);
+      FormsService.focusFirstInvalidFieldRecursive(this.contactForm);
       this.submitted = true;
     }
   }

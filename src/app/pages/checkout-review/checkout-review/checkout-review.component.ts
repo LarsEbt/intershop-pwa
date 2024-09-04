@@ -14,6 +14,7 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { Basket } from 'ish-core/models/basket/basket.model';
 import { HttpError } from 'ish-core/models/http-error/http-error.model';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 @Component({
   selector: 'ish-checkout-review',
@@ -52,6 +53,7 @@ export class CheckoutReviewComponent implements OnInit, OnChanges {
     if (this.form.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.form);
+      FormsService.focusFirstInvalidFieldRecursive(this.form);
       return;
     }
     this.createOrder.emit();

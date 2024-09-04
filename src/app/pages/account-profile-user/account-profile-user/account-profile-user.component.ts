@@ -11,6 +11,7 @@ import { HttpError } from 'ish-core/models/http-error/http-error.model';
 import { User } from 'ish-core/models/user/user.model';
 import { FieldLibrary } from 'ish-shared/formly/field-library/field-library';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 interface ComponentState {
   currentUser: User;
@@ -94,6 +95,7 @@ export class AccountProfileUserComponent extends RxState<ComponentState> impleme
     if (this.accountProfileUserForm.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.accountProfileUserForm);
+      FormsService.focusFirstInvalidFieldRecursive(this.accountProfileUserForm);
       return;
     }
 

@@ -21,6 +21,7 @@ import { HttpError } from 'ish-core/models/http-error/http-error.model';
 import { PaymentInstrument } from 'ish-core/models/payment-instrument/payment-instrument.model';
 import { PaymentMethod } from 'ish-core/models/payment-method/payment-method.model';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 /**
  * The Checkout Payment Component renders the checkout payment page.
@@ -184,6 +185,7 @@ export class CheckoutPaymentComponent implements OnInit, OnChanges {
     if (this.paymentForm.invalid) {
       this.formSubmitted = true;
       markAsDirtyRecursive(this.parameterForm);
+      FormsService.focusFirstInvalidFieldRecursive(this.parameterForm);
       return;
     }
 

@@ -161,6 +161,7 @@ export class CostCenterBuyersPageComponent implements OnInit {
     if (this.form.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.form);
+      FormsService.focusFirstInvalidFieldRecursive(this.form);
       return;
     }
     const buyers: CostCenterBuyer[] = this.model.addBuyers

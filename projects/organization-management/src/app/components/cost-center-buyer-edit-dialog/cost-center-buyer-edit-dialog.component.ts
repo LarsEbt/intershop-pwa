@@ -87,6 +87,7 @@ export class CostCenterBuyerEditDialogComponent implements OnInit {
     if (this.costCenterBuyerForm.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.costCenterBuyerForm);
+      FormsService.focusFirstInvalidFieldRecursive(this.costCenterBuyerForm);
       return;
     }
 

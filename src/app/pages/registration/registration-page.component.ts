@@ -13,6 +13,7 @@ import { HttpError } from 'ish-core/models/http-error/http-error.model';
 import { FeatureEventService } from 'ish-core/utils/feature-event/feature-event.service';
 import { whenTruthy } from 'ish-core/utils/operators';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 import {
   RegistrationConfigType,
@@ -71,6 +72,7 @@ export class RegistrationPageComponent implements OnInit {
   onCreate() {
     if (this.form.invalid) {
       markAsDirtyRecursive(this.form);
+      FormsService.focusFirstInvalidFieldRecursive(this.form);
       this.submitted = true;
       return;
     }

@@ -10,6 +10,7 @@ import { CheckoutFacade } from 'ish-core/facades/checkout.facade';
 import { SelectOption } from 'ish-core/models/select-option/select-option.model';
 import { whenTruthy } from 'ish-core/utils/operators';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 /**
  * Assign a cost center for to the basket for business customers
@@ -80,6 +81,7 @@ export class BasketCostCenterSelectionComponent implements OnInit {
         results?.errors?.find(error => error.code === 'basket.validation.cost_center_missing.error')
       ) {
         markAsDirtyRecursive(this.form);
+        FormsService.focusFirstInvalidFieldRecursive(this.form);
         this.cd.markForCheck();
       }
     });

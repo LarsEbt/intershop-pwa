@@ -3,6 +3,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 import { SpecialValidators } from 'ish-shared/forms/validators/special-validators';
 
 import { PunchoutType, PunchoutUser } from '../../models/punchout-user/punchout-user.model';
@@ -127,6 +128,7 @@ export class PunchoutUserFormComponent implements OnInit {
     if (this.form.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.form);
+      FormsService.focusFirstInvalidFieldRecursive(this.form);
       return;
     }
 

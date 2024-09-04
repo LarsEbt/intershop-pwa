@@ -6,6 +6,7 @@ import { Observable, map, tap } from 'rxjs';
 
 import { AccountFacade } from 'ish-core/facades/account.facade';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 import { ProductReviewsFacade } from '../../facades/product-reviews.facade';
 import { ProductReview } from '../../models/product-reviews/product-review.model';
@@ -124,6 +125,7 @@ export class ProductReviewCreateDialogComponent implements OnInit {
   submitForm(sku: string) {
     if (this.form.invalid) {
       markAsDirtyRecursive(this.form);
+      FormsService.focusFirstInvalidFieldRecursive(this.form);
       this.submitted = true;
       return;
     } else {

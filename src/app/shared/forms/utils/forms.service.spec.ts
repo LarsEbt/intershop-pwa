@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { isEmpty, of } from 'rxjs';
 import { anyString, instance, mock, when } from 'ts-mockito';
@@ -95,6 +96,72 @@ describe('Forms Service', () => {
   describe('getCostCenterBudgetPeriodOptions', () => {
     it('should return budget period options if called', () => {
       expect(FormsService.getCostCenterBudgetPeriodOptions()).toHaveLength(6);
+    });
+  });
+
+  describe('focusFirstInvalidFieldRecursive', () => {
+    let element1: HTMLInputElement;
+    let element2: HTMLInputElement;
+    let element3: HTMLInputElement;
+
+    beforeEach(() => {
+      element1 = document.createElement('input');
+      element1.id = 'formly_field1';
+      document.body.appendChild(element1);
+
+      element2 = document.createElement('input');
+      element2.id = 'formly_field2';
+      document.body.appendChild(element2);
+
+      element3 = document.createElement('input');
+      element3.id = 'formly_field3';
+      document.body.appendChild(element3);
+    });
+
+    it('should focus on the first invalid field in a form', () => {
+      const form = new FormGroup({
+        field1: new FormControl('', Validators.required),
+        field2: new FormControl('', Validators.required),
+        field3: new FormControl(''),
+      });
+
+      form.controls.field1.markAsTouched();
+      form.controls.field2.markAsTouched();
+
+      FormsService.focusFirstInvalidFieldRecursive(form);
+
+      expect(document.activeElement).toStrictEqual(element1);
+    });
+
+    it('should focus on the first invalid field in a nested form group', () => {
+      const form = new FormGroup({
+        group: new FormGroup({
+          field1: new FormControl('', Validators.required),
+          field2: new FormControl('', Validators.required),
+        }),
+        field3: new FormControl(''),
+      });
+
+      form.get('group.field1').markAsTouched();
+      form.get('group.field2').markAsTouched();
+
+      FormsService.focusFirstInvalidFieldRecursive(form);
+
+      expect(document.activeElement).toStrictEqual(element1);
+    });
+
+    it('should not focus on any field if all fields are valid', () => {
+      const form = new FormGroup({
+        field1: new FormControl('valid'),
+        field2: new FormControl('valid'),
+        field3: new FormControl('valid'),
+      });
+
+      FormsService.focusFirstInvalidFieldRecursive(form);
+
+      expect(document.activeElement).not.toBe(element1);
+      expect(document.activeElement).not.toBe(element2);
+      expect(document.activeElement).not.toBe(element3);
     });
   });
 });

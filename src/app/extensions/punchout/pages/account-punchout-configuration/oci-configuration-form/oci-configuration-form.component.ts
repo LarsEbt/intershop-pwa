@@ -7,6 +7,7 @@ import { Observable, filter, map, shareReplay, take } from 'rxjs';
 import { HttpError } from 'ish-core/models/http-error/http-error.model';
 import { SelectOption } from 'ish-core/models/select-option/select-option.model';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 import { SpecialValidators } from 'ish-shared/forms/validators/special-validators';
 
 import { PunchoutFacade } from '../../../facades/punchout.facade';
@@ -158,6 +159,7 @@ export class OciConfigurationFormComponent implements OnInit {
     if (this.form.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.form);
+      FormsService.focusFirstInvalidFieldRecursive(this.form);
       return;
     }
     this.punchoutFacade.updateOciConfiguration(this.form.value.ociConfig);

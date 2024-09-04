@@ -14,6 +14,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { pick } from 'lodash-es';
 
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 import { SpecialValidators } from 'ish-shared/forms/validators/special-validators';
 
 import { OrderTemplate } from '../../models/order-template/order-template.model';
@@ -105,6 +106,7 @@ export class OrderTemplatePreferencesDialogComponent implements OnInit {
     if (this.orderTemplateForm.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.orderTemplateForm);
+      FormsService.focusFirstInvalidFieldRecursive(this.orderTemplateForm);
       return;
     }
 

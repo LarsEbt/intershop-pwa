@@ -13,6 +13,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 
 import { HttpError } from 'ish-core/models/http-error/http-error.model';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 import { SpecialValidators } from 'ish-shared/forms/validators/special-validators';
 
 /**
@@ -110,6 +111,7 @@ export class AccountProfilePasswordComponent implements OnInit, OnChanges {
     if (this.accountProfilePasswordForm.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.accountProfilePasswordForm);
+      FormsService.focusFirstInvalidFieldRecursive(this.accountProfilePasswordForm);
       return;
     }
 

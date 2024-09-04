@@ -17,6 +17,7 @@ import { AccountFacade } from 'ish-core/facades/account.facade';
 import { FeatureToggleService } from 'ish-core/feature-toggle.module';
 import { Address } from 'ish-core/models/address/address.model';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 /**
  * The Customer Address Form Component renders an address form with apply/cancel buttons so that the user can create or edit an address.
@@ -107,6 +108,7 @@ export class FormlyCustomerAddressFormComponent implements OnInit, OnChanges {
     if (this.form.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.form);
+      FormsService.focusFirstInvalidFieldRecursive(this.form);
       return;
     }
 

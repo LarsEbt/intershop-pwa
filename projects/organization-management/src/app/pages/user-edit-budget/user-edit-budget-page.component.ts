@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { HttpError } from 'ish-core/models/http-error/http-error.model';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 import { OrganizationManagementFacade } from '../../facades/organization-management.facade';
 import { B2bUser } from '../../models/b2b-user/b2b-user.model';
@@ -33,6 +34,7 @@ export class UserEditBudgetPageComponent implements OnInit {
     if (this.budgetForm.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.budgetForm);
+      FormsService.focusFirstInvalidFieldRecursive(this.budgetForm);
       return;
     }
 

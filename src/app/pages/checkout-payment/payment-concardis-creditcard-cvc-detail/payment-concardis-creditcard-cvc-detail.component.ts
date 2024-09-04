@@ -7,6 +7,7 @@ import { CheckoutFacade } from 'ish-core/facades/checkout.facade';
 import { PaymentInstrument } from 'ish-core/models/payment-instrument/payment-instrument.model';
 import { ScriptLoaderService } from 'ish-core/utils/script-loader/script-loader.service';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 import { PaymentConcardisComponent } from '../payment-concardis/payment-concardis.component';
 
@@ -168,6 +169,7 @@ export class PaymentConcardisCreditcardCvcDetailComponent extends PaymentConcard
         } else {
           this.cvcDetailForm.get('cvcDetail').setErrors({ required: true });
           markAsDirtyRecursive(this.cvcDetailForm);
+          FormsService.focusFirstInvalidFieldRecursive(this.cvcDetailForm);
         }
       }
     }

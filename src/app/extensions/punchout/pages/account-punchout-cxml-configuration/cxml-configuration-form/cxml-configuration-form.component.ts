@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 
 import { HttpError } from 'ish-core/models/http-error/http-error.model';
 import { markAsDirtyRecursive } from 'ish-shared/forms/utils/form-utils';
+import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 import { PunchoutFacade } from '../../../facades/punchout.facade';
 import { CxmlConfiguration } from '../../../models/cxml-configuration/cxml-configuration.model';
@@ -78,6 +79,7 @@ export class CxmlConfigurationFormComponent implements OnDestroy, OnInit {
     if (this.form.invalid) {
       this.submitted = true;
       markAsDirtyRecursive(this.form);
+      FormsService.focusFirstInvalidFieldRecursive(this.form);
       return;
     }
 
