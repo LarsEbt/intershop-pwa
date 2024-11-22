@@ -5,11 +5,11 @@ import { anything, instance, mock, verify, when } from 'ts-mockito';
 import { SuggestTerm } from 'ish-core/models/suggest-term/suggest-term.model';
 import { ApiService } from 'ish-core/services/api/api.service';
 
-import { SuggestService } from './suggest.service';
+import { DefaultSuggestService } from './default-suggest.service';
 
-describe('Suggest Service', () => {
+describe('Default Suggest Service', () => {
   let apiService: ApiService;
-  let suggestService: SuggestService;
+  let suggestService: DefaultSuggestService;
 
   beforeEach(() => {
     apiService = mock(ApiService);
@@ -17,7 +17,7 @@ describe('Suggest Service', () => {
     TestBed.configureTestingModule({
       providers: [{ provide: ApiService, useFactory: () => instance(apiService) }],
     });
-    suggestService = TestBed.inject(SuggestService);
+    suggestService = TestBed.inject(DefaultSuggestService);
   });
 
   it('should always delegate to api service when called', () => {

@@ -20,6 +20,7 @@ import { CategoriesService } from 'ish-core/services/categories/categories.servi
 import { ConfigurationService } from 'ish-core/services/configuration/configuration.service';
 import { CountryService } from 'ish-core/services/country/country.service';
 import { DataRequestsService } from 'ish-core/services/data-requests/data-requests.service';
+import { DefaultSuggestService } from 'ish-core/services/default-suggest/default-suggest.service';
 import { FilterService } from 'ish-core/services/filter/filter.service';
 import { NewsletterService } from 'ish-core/services/newsletter/newsletter.service';
 import { OrderService } from 'ish-core/services/order/order.service';
@@ -186,7 +187,7 @@ describe('Customer Store', () => {
         { provide: PricesService, useFactory: () => instance(productPriceServiceMock) },
         { provide: ProductsService, useFactory: () => instance(productsServiceMock) },
         { provide: PromotionsService, useFactory: () => instance(promotionsServiceMock) },
-        { provide: SuggestService, useFactory: () => instance(mock(SuggestService)) },
+        { provide: SuggestService, useFactory: () => instance(mock(DefaultSuggestService)) },
         { provide: TokenService, useFactory: () => instance(mock(TokenService)) },
         { provide: UserService, useFactory: () => instance(userServiceMock) },
         { provide: WarrantyService, useFactory: () => instance(mock(WarrantyService)) },

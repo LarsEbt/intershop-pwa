@@ -6,6 +6,7 @@ import { of, throwError } from 'rxjs';
 import { anyNumber, anyString, anything, capture, instance, mock, spy, verify, when } from 'ts-mockito';
 
 import { SuggestTerm } from 'ish-core/models/suggest-term/suggest-term.model';
+import { DefaultSuggestService } from 'ish-core/services/default-suggest/default-suggest.service';
 import { ProductsService } from 'ish-core/services/products/products.service';
 import { SuggestService } from 'ish-core/services/suggest/suggest.service';
 import { CoreStoreModule } from 'ish-core/store/core/core-store.module';
@@ -25,13 +26,13 @@ describe('Search Effects', () => {
   let effects: SearchEffects;
   let router: Router;
   let productsServiceMock: ProductsService;
-  let suggestServiceMock: SuggestService;
+  let suggestServiceMock: DefaultSuggestService;
   let httpStatusCodeService: HttpStatusCodeService;
 
   const suggests = [{ term: 'Goods' }] as SuggestTerm[];
 
   beforeEach(() => {
-    suggestServiceMock = mock(SuggestService);
+    suggestServiceMock = mock(DefaultSuggestService);
     when(suggestServiceMock.search(anyString())).thenReturn(of<SuggestTerm[]>(suggests));
     productsServiceMock = mock(ProductsService);
     const skus = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];

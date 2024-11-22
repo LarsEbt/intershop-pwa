@@ -14,6 +14,7 @@ import { Promotion } from 'ish-core/models/promotion/promotion.model';
 import { CategoriesService } from 'ish-core/services/categories/categories.service';
 import { ConfigurationService } from 'ish-core/services/configuration/configuration.service';
 import { CountryService } from 'ish-core/services/country/country.service';
+import { DefaultSuggestService } from 'ish-core/services/default-suggest/default-suggest.service';
 import { FilterService } from 'ish-core/services/filter/filter.service';
 import { PricesService } from 'ish-core/services/prices/prices.service';
 import { ProductsService } from 'ish-core/services/products/products.service';
@@ -42,7 +43,7 @@ describe('Shopping Store', () => {
   let categoriesServiceMock: CategoriesService;
   let productsServiceMock: ProductsService;
   let promotionsServiceMock: PromotionsService;
-  let suggestServiceMock: SuggestService;
+  let suggestServiceMock: DefaultSuggestService;
   let filterServiceMock: FilterService;
   let priceServiceMock: PricesService;
   let warrantyServiceMock: WarrantyService;
@@ -133,7 +134,7 @@ describe('Shopping Store', () => {
     promotionsServiceMock = mock(PromotionsService);
     when(promotionsServiceMock.getPromotion(anything())).thenReturn(of(promotion));
 
-    suggestServiceMock = mock(SuggestService);
+    suggestServiceMock = mock(DefaultSuggestService);
     when(suggestServiceMock.search('some')).thenReturn(of([{ term: 'something' }]));
 
     filterServiceMock = mock(FilterService);

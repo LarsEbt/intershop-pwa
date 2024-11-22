@@ -7,6 +7,7 @@ import { ViewconfState } from 'ish-core/store/core/viewconf/viewconf.reducer';
 
 import { RouterState } from './router/router.reducer';
 import { ServerConfigState } from './server-config/server-config.reducer';
+import { SparqueState } from './sparque/sparque.reducer';
 
 export interface CoreState {
   router: RouterReducerState<RouterState>;
@@ -14,6 +15,7 @@ export interface CoreState {
   viewconf: ViewconfState;
   configuration: ConfigurationState;
   serverConfig: ServerConfigState;
+  sparqueConfig: SparqueState;
 }
 
 export const getCoreState: Selector<CoreState, CoreState> = state => state;
