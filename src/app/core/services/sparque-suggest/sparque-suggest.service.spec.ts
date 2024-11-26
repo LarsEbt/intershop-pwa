@@ -28,7 +28,7 @@ describe('Sparque Suggest Service', () => {
   });
 
   it('should return the matched terms when search term is executed', done => {
-    when(sparqueApiService.get(anything(), anything())).thenReturn(of({ keywordSuggestions: [{ Keyword: 'Goods' }] }));
+    when(sparqueApiService.get(anything(), anything())).thenReturn(of({ keywordSuggestions: [{ keyword: 'Goods' }] }));
 
     suggestService.search('g').subscribe(res => {
       expect(res).toMatchInlineSnapshot(`

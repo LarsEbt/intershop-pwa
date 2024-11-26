@@ -44,7 +44,7 @@ interface SparqueBrand {
 }
 
 interface SparqueKeywordSuggestions {
-  Keyword: string;
+  keyword: string;
 }
 
 interface SparqueContentSuggestions {

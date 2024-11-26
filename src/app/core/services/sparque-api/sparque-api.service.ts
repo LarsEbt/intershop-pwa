@@ -8,7 +8,7 @@ import { FeatureToggleService } from 'ish-core/feature-toggle.module';
 import { SparqueConfig } from 'ish-core/models/sparque/sparque-config.model';
 import { ApiService, AvailableOptions } from 'ish-core/services/api/api.service';
 import { TokenService } from 'ish-core/services/token/token.service';
-import { getCurrentLocale, getICMChannel } from 'ish-core/store/core/configuration';
+import { getCurrentLocale } from 'ish-core/store/core/configuration';
 import { ApiTokenService } from 'ish-core/utils/api-token/api-token.service';
 import { whenTruthy } from 'ish-core/utils/operators';
 import { StatePropertiesService } from 'ish-core/utils/state-transfer/state-properties.service';
@@ -57,15 +57,15 @@ export class SparqueApiService extends ApiService {
       .getStateOrEnvOrDefault<SparqueConfig>('sparque', 'sparque')
       .pipe(
         take(1),
-        concatLatestFrom(() => [this.store.pipe(select(getCurrentLocale)), this.store.pipe(select(getICMChannel))])
+        concatLatestFrom(() => this.store.pipe(select(getCurrentLocale)))
       )
-      .subscribe(([config, locale, channel]) => {
+      .subscribe(([config, locale]) => {
         Object.keys(config).forEach(key => {
           if (!SPARQUE_CONFIG_EXCLUDE_PARAMS.includes(key)) {
             sparqueParams = sparqueParams.append(key, String(config[key]));
           }
         });
-        sparqueParams = sparqueParams.appendAll({ Locale: locale, ChannelId: channel });
+        sparqueParams = sparqueParams.append('Locale', locale.replace('_', '-'));
       });
     return sparqueParams;
   }

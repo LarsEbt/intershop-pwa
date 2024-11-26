@@ -23,6 +23,7 @@ kb_sync_latest_only
   - [Guide - Propagating Environment Variables](./guides/propagating-environment-variables.md)
 - [Concept - Localization](./concepts/localization.md)
 - [Concept - SEO](./concepts/search-engine-optimization.md)
+- [Concept - SPARQUE](./concepts/sparque-integration.md)
 - [Guide - Forms](./guides/forms.md)
 - [Guide - Formly](./guides/formly.md)
 - [Guide - Field Library](./guides/field-library.md)

@@ -6,8 +6,10 @@ export class SparqueMapper {
     const terms: SuggestTerm[] = [];
     if (data) {
       data.keywordSuggestions
-        ?.map(suggestions => suggestions.Keyword)
-        .forEach(keyword => terms.push({ term: keyword }));
+        ?.map(suggestions => suggestions.keyword)
+        .forEach(keyword => {
+          terms.push({ term: keyword });
+        });
     }
     return terms;
   }

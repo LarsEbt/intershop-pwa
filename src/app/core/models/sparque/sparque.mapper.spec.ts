@@ -7,7 +7,7 @@ describe('Sparque Mapper', () => {
       products: [],
       categories: [],
       brands: [],
-      keywordSuggestions: [{ Keyword: 'phrase1' }, { Keyword: 'phrase2' }],
+      keywordSuggestions: [{ keyword: 'phrase1' }, { keyword: 'phrase2' }],
       contentSuggestions: [],
     } as SparqueSuggestions;
 
