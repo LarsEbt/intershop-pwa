@@ -15,7 +15,6 @@ import { PaymentPayoneInterceptor } from './interceptors/payment-payone.intercep
 import { PGIDChangeInterceptor } from './interceptors/pgid-change.interceptor';
 import { PreviewInterceptor } from './interceptors/preview.interceptor';
 import { InternationalizationModule } from './internationalization.module';
-import { ApiService } from './services/api/api.service';
 import { SuggestService, suggestServiceFactory } from './services/suggest/suggest.service';
 import { StateManagementModule } from './state-management.module';
 import { DefaultErrorHandler } from './utils/default-error-handler';
@@ -53,7 +52,6 @@ import { DefaultErrorHandler } from './utils/default-error-handler';
     {
       provide: SuggestService,
       useFactory: suggestServiceFactory,
-      deps: [ApiService],
     },
   ],
   // exports needed to use the cookie banner in the AppComponent

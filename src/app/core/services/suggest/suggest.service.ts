@@ -5,6 +5,7 @@ import { SparqueConfig } from 'ish-core/models/sparque/sparque-config.model';
 import { SuggestTerm } from 'ish-core/models/suggest-term/suggest-term.model';
 import { ApiService } from 'ish-core/services/api/api.service';
 import { DefaultSuggestService } from 'ish-core/services/default-suggest/default-suggest.service';
+import { SparqueApiService } from 'ish-core/services/sparque-api/sparque-api.service';
 import { SparqueSuggestService } from 'ish-core/services/sparque-suggest/sparque-suggest.service';
 import { StatePropertiesService } from 'ish-core/utils/state-transfer/state-properties.service';
 
@@ -12,7 +13,7 @@ export abstract class SuggestService {
   abstract search(searchTerm: string): Observable<SuggestTerm[]>;
 }
 
-export function suggestServiceFactory(apiService: ApiService) {
+export function suggestServiceFactory() {
   const statePropertiesService = inject(StatePropertiesService);
   let isSparqueConfigured = false;
 
@@ -26,9 +27,7 @@ export function suggestServiceFactory(apiService: ApiService) {
     });
 
   if (isSparqueConfigured) {
-    console.log('Sparque is configured');
-    return new SparqueSuggestService(apiService);
+    return new SparqueSuggestService(inject(SparqueApiService));
   }
-  console.log('Sparque is not configured');
-  return new DefaultSuggestService(apiService);
+  return new DefaultSuggestService(inject(ApiService));
 }

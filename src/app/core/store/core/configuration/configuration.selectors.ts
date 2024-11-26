@@ -36,6 +36,8 @@ export const getICMStaticURL = createSelector(getConfigurationState, getICMAppli
     : undefined
 );
 
+export const getICMChannel = createSelector(getConfigurationState, state => state.channel);
+
 export const getICMBaseURL = createSelector(getConfigurationState, state => state.baseURL);
 
 export const getFeatures = createSelector(getConfigurationState, state =>

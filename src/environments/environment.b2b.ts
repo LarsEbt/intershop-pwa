@@ -9,10 +9,13 @@ export const environment: Environment = {
   themeColor: '#688dc3',
 
   /**sparque: {
-    url: 'https://rest.sparque.ai',
-    wrapper_url: 'http://localhost:28090/1/intershop-obi/api/PWA',
-    workspace: 'intershop-obi',
-    api: 'PWA',
+    url: 'http://localhost:5755',
+    wrapperAPI: 'v2',
+    WorkspaceName: 'soennecken',
+    //WorkspaceName: 'intershop-project-base-v2-team2',
+    ApiName: 'extended',
+    //ApiName: 'PWA',
+    //config: 'production',
   },**/
 
   features: [

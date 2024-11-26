@@ -16,7 +16,6 @@ import { MessagesEffects } from './messages/messages.effects';
 import { CustomRouterSerializer } from './router/router.serializer';
 import { ServerConfigEffects } from './server-config/server-config.effects';
 import { serverConfigReducer } from './server-config/server-config.reducer';
-import { sparqueReducer } from './sparque/sparque.reducer';
 import { ViewconfEffects } from './viewconf/viewconf.effects';
 import { viewconfReducer } from './viewconf/viewconf.reducer';
 
@@ -26,7 +25,6 @@ const coreReducers: ActionReducerMap<CoreState> = {
   viewconf: viewconfReducer,
   configuration: configurationReducer,
   serverConfig: serverConfigReducer,
-  sparqueConfig: sparqueReducer,
 };
 
 const coreEffects = [ErrorEffects, ViewconfEffects, ConfigurationEffects, MessagesEffects, ServerConfigEffects];
