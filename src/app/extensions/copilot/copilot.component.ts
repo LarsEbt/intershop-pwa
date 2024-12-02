@@ -22,6 +22,16 @@ import { CompareFacade } from '../compare/facades/compare.facade';
 
 import { CopilotFacade } from './facades/copilot.facade';
 
+interface ToolCall {
+  tool: string;
+  toolInput?: {
+    Query?: string;
+    SKU?: string;
+    SKUs?: string;
+    Products?: string;
+  };
+}
+
 @Component({
   selector: 'ish-app-copilot',
   template: '',
@@ -34,6 +44,7 @@ export class CopilotComponent implements OnInit, OnDestroy {
 
   restEndpoint$: Observable<string>;
   locale = 'en_US';
+  private toolCallEventHandler: (event: Event) => void;
 
   constructor(
     rendererFactory: RendererFactory2,
@@ -49,45 +60,64 @@ export class CopilotComponent implements OnInit, OnDestroy {
     this.renderer = rendererFactory.createRenderer(undefined, undefined);
   }
 
+  private get window(): Window {
+    return this.document.defaultView;
+  }
+
+  private get isBrowser(): boolean {
+    return !SSR;
+  }
+
   ngOnInit(): void {
-    if (typeof window !== 'undefined') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).handleToolCall = this.handleToolCall.bind(this); // Expose handleToolCall globally
+    if (this.isBrowser) {
       this.initializeCopilot();
       this.copilotToolCall$ = this.copilotFacade.copilotToolCall$;
       this.copilotFacade.setCopilotToolCall('product_search');
+
+      // Bind the event handler and store the reference
+      this.toolCallEventHandler = this.onToolCallEvent.bind(this);
+      this.document.addEventListener('toolCallEvent', this.toolCallEventHandler);
     }
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+
+    if (this.window) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (this.window as any).handleToolCall;
+    }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async handleToolCall(toolCall: any) {
-    switch (toolCall?.tool) {
+  private async handleToolCall(toolCall: ToolCall) {
+    if (!toolCall?.tool) {
+      return;
+    }
+
+    switch (toolCall.tool) {
+      case 'open_help_page':
+        this.navigate('/page/page.helpdesk.pagelet2-Page');
+        break;
       case 'product_search':
-        this.navigate(`/search/${toolCall?.toolInput?.Query}`);
+        this.navigate(`/search/${toolCall.toolInput?.Query}`);
         break;
       case 'product_detail_page':
         this.navigate(`/product/${toolCall?.toolInput?.SKU}`);
         break;
       case 'get_product_variations':
-        this.navigate(`/product/${toolCall?.toolInput?.SKU}`);
+        this.navigate(`/product/${toolCall.toolInput?.SKU}`);
         break;
       case 'open_basket':
-        this.navigate('/basket').then(() => {
-          window.location.href = '/basket';
-        });
+        this.navigate('/basket');
         break;
       case 'compare_products':
-        this.handleCompareProducts(toolCall?.toolInput?.SKUs);
+        this.handleCompareProducts(toolCall.toolInput?.SKUs);
         break;
       case 'add_product_to_basket':
-        this.ngZone.run(async () => {
-          const skus = toolCall?.toolInput.Products.split(';');
-          skus.forEach((sku: string) => {
+        this.ngZone.run(() => {
+          const skus = toolCall.toolInput?.Products?.split(';') || [];
+          skus.forEach(sku => {
             this.shoppingFacade.addProductToBasket(sku, 1);
           });
         });
@@ -97,87 +127,105 @@ export class CopilotComponent implements OnInit, OnDestroy {
     }
   }
 
+  private onToolCallEvent(event: Event): void {
+    const customEvent = event as CustomEvent;
+    this.handleToolCall(customEvent.detail);
+  }
+
   private async getRestEndpoint() {
-    const locale = await this.copilotFacade.getCurrentLocale();
-    const currency = await this.copilotFacade.getCurrentCurrency();
-    const restEndpoint = await this.copilotFacade.getRestEndpoint();
+    const [locale, currency, restEndpoint] = await Promise.all([
+      this.copilotFacade.getCurrentLocale(),
+      this.copilotFacade.getCurrentCurrency(),
+      this.copilotFacade.getRestEndpoint(),
+    ]);
 
-    // if locale or currency is not available, use defaults en_US and curr=USD
-    if (!locale || !currency) {
-      return `${restEndpoint};loc=en_US;cur=USD`;
-    }
+    this.locale = locale || 'en_US';
+    const currencyCode = currency || 'USD';
 
-    this.locale = locale;
-    return `${restEndpoint};loc=${locale};cur=${currency}`;
+    return `${restEndpoint};loc=${this.locale};cur=${currencyCode}`;
   }
 
   private handleCompareProducts(skuString: string) {
-    const newProductIds = skuString.split(';');
-    this.compareFacade.compareProducts$
-      .pipe(
-        take(1), // Take only the first emission and then complete
-        takeUntil(this.destroy$)
-      )
-      .subscribe(currentCompareIds => {
-        currentCompareIds.forEach((currentId: string) => {
-          this.compareFacade.removeProductFromCompare(currentId);
-        });
-        newProductIds.forEach((newId: string) => {
-          this.compareFacade.toggleProductCompare(newId);
-        });
-        this.ngZone.run(() => {
-          this.router.navigate(['/compare']);
-        });
+    const newProductIds = skuString ? skuString.split(';') : [];
+
+    this.compareFacade.compareProducts$.pipe(take(1), takeUntil(this.destroy$)).subscribe(currentCompareIds => {
+      currentCompareIds.forEach(id => this.compareFacade.removeProductFromCompare(id));
+      newProductIds.forEach(id => this.compareFacade.toggleProductCompare(id));
+
+      this.ngZone.run(() => {
+        this.router.navigate(['/compare']);
       });
+    });
   }
 
-  private navigate(url: string): Promise<boolean> {
-    return this.ngZone.run(() => this.router.navigateByUrl(url));
+  private navigate(url: string): void {
+    this.ngZone.run(() => this.router.navigateByUrl(url));
   }
 
   private async initializeCopilot() {
-    if (!SSR && this.featureToggleService.enabled('copilot')) {
-      const customer = await this.copilotFacade.getCustomerState();
-      const restEndpoint = await this.getRestEndpoint();
+    if (this.isBrowser && this.featureToggleService.enabled('copilot')) {
+      const [customer, restEndpoint] = await Promise.all([
+        this.copilotFacade.getCustomerState(),
+        this.getRestEndpoint(),
+      ]);
+
+      const token = localStorage.getItem('icm_access_token');
+      const primaryColor = this.getPrimaryColor();
+      const welcomeMessage = this.getWelcomeMessage();
+
+      // Load the external script
+      const scriptContent = this.getChatbotScriptContent(customer, restEndpoint, token, primaryColor, welcomeMessage);
+
       const script = this.renderer.createElement('script');
       script.type = 'module';
+      script.text = scriptContent;
+      this.renderer.appendChild(this.document.body, script);
+    }
+  }
 
-      // create different welcome message based on the locale: en_US, de_DE, fr_FR
-      let welcomeMessage = 'Welcome! How can I assist you today?';
-      if (this.locale === 'de_DE') {
-        welcomeMessage = 'Willkommen! Wie kann ich Ihnen heute helfen?';
-      } else if (this.locale === 'fr_FR') {
-        welcomeMessage = 'Bienvenue! Comment puis-je vous aider aujourd`hui?';
-      }
+  private getPrimaryColor(): string {
+    const style = getComputedStyle(this.document.documentElement);
+    return (
+      style.getPropertyValue('--color-copilot').trim() ||
+      style.getPropertyValue('--color-primary').trim() ||
+      style.getPropertyValue('--primary').trim() ||
+      '#000000'
+    );
+  }
 
-      let primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-copilot').trim();
+  private getWelcomeMessage(): string {
+    switch (this.locale) {
+      case 'de_DE':
+        return 'Willkommen! Wie kann ich Ihnen heute helfen?';
+      case 'fr_FR':
+        return "Bienvenue! Comment puis-je vous aider aujourd'hui?";
+      default:
+        return 'Welcome! How can I assist you today?';
+    }
+  }
 
-      if (primaryColor === '') {
-        primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
-      }
-
-      if (primaryColor === '') {
-        primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
-      }
-
-      const prefix = 'icm_';
-      const token = localStorage.getItem(`${prefix}access_token`);
-
-      script.text = `
+  private getChatbotScriptContent(
+    customer: unknown,
+    restEndpoint: string,
+    token: string,
+    primaryColor: string,
+    welcomeMessage: string
+  ): string {
+    return `
         (async () => {
           const { default: Chatbot } = await import("${this.copilotSettings.cdnLink}");
           let latestMessages = [];
           let previousLoading = false; // Assuming initial loading state is false
 
           Chatbot.init({
-            chatflowid: "${this.copilotSettings.chatflowid}",
-            apiHost: "${this.copilotSettings.apiHost}",
+            chatflowid: ${JSON.stringify(this.copilotSettings.chatflowid)},
+            apiHost: ${JSON.stringify(this.copilotSettings.apiHost)},
             chatflowConfig: {
               vars: {
                 customer: ${JSON.stringify(customer)},
-                restEndpoint: "${restEndpoint}",
+                restEndpoint: ${JSON.stringify(restEndpoint)},
                 locale: "${this.locale}",
-                user_token: "${token}",
+                user_token: ${JSON.stringify(token)},
               },
             },
             observersConfig: {
@@ -196,44 +244,44 @@ export class CopilotComponent implements OnInit, OnDestroy {
               },
               // The bot loading signal changed
               observeLoading: (loading) => {
-                  console.log({ loading });
+                console.log({ loading });
 
-                  // Detect transition from true to false
-                  if (previousLoading && !loading) {
-                    // Ensure there are messages to process
-                    if (!latestMessages || latestMessages.length === 0) {
-                      console.warn('No messages available to process.');
-                      return;
-                    }
-
-                    // Get the last message in the array
-                    const lastMessage = latestMessages[latestMessages.length - 1];
-
-                    // Check if the last message has a messageId
-                    if (lastMessage.messageId) {
-                      // Ensure usedTools exists and has at least one tool
-                      if (lastMessage.usedTools && lastMessage.usedTools.length > 0) {
-                        // Extract the last tool from the usedTools array
-                        const lastTool = lastMessage.usedTools[lastMessage.usedTools.length - 1];
-
-                        // Check if the lastTool has the necessary structure
-                        if (lastTool) {
-                          // Call the handleToolCall function with the last tool
-                          window.handleToolCall(lastTool);
-                        } else {
-                          console.warn('Last tool does not have the expected structure:', lastTool);
-                        }
-                      } else {
-                        // console.warn('No tools found in the last message:', lastMessage);
-                      }
-                    } else {
-                      // console.warn('Last message does not contain a messageId:', lastMessage);
-                    }
+                // Detect transition from true to false
+                if (previousLoading && !loading) {
+                  if (!latestMessages?.length) {
+                    console.warn('No messages available to process.');
+                    return;
                   }
 
-                  // Update previousLoading for the next change
-                  previousLoading = loading;
-                },
+                  const lastMessage = latestMessages[latestMessages.length - 1];
+
+                  if (!lastMessage.messageId) {
+                    console.warn('Last message does not contain a messageId:', lastMessage);
+                    return;
+                  }
+
+                  const usedTools = lastMessage.usedTools;
+
+                  if (!usedTools?.length) {
+                    console.warn('No tools found in the last message:', lastMessage);
+                    return;
+                  }
+
+                  const lastTool = usedTools[usedTools.length - 1];
+
+                  if (!lastTool) {
+                    console.warn('Last tool does not have the expected structure:', lastTool);
+                    return;
+                  }
+
+                  // Call the handleToolCall function with the last tool
+                  document.dispatchEvent(new CustomEvent('toolCallEvent', { detail: lastTool }));
+
+                }
+
+                // Update previousLoading for the next change
+                previousLoading = loading;
+              },
             },
             theme: {
               button: {
@@ -243,8 +291,8 @@ export class CopilotComponent implements OnInit, OnDestroy {
               chatWindow: {
                 showTitle: true,
                 showAgentMessages: false,
-                title: "${this.copilotSettings.copilotTitle}",
-                welcomeMessage: '${welcomeMessage}',
+                title: ${JSON.stringify(this.copilotSettings.copilotTitle)},
+                welcomeMessage: ${JSON.stringify(welcomeMessage)},
                 backgroundColor: '#f8f9fa',
                 height: 700,
                 fontSize: '0.875rem',
@@ -276,7 +324,5 @@ export class CopilotComponent implements OnInit, OnDestroy {
           });
         })();
       `;
-      this.renderer.appendChild(this.document.body, script);
-    }
   }
 }
