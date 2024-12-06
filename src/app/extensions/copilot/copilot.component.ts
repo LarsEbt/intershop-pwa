@@ -192,7 +192,7 @@ export class CopilotComponent implements OnInit, OnDestroy {
       '#000000'
     );
   }
-
+  //Willkommensnachricht
   private getWelcomeMessage(): string {
     switch (this.locale) {
       case 'de_DE':
@@ -296,6 +296,8 @@ export class CopilotComponent implements OnInit, OnDestroy {
                 backgroundColor: '#f8f9fa',
                 height: 700,
                 fontSize: '0.875rem',
+                
+                //hier starter Prompts 
                 starterPrompts: ['What can you do for me?', 'Who are you?'],
                 botMessage: {
                   backgroundColor: '#ffffff',

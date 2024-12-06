@@ -225,8 +225,9 @@ export const ENVIRONMENT_DEFAULTS: Omit<Environment, 'icmChannel'> = {
 
   copilotConfig: {
     copilotTitle: 'inSPIRED Assistant',
-    chatflowid: '3ae443a9-b15f-4eca-a23c-8b496b7bbddf',
-    apiHost: 'https://ish-flowise-app.azurewebsites.net',
-    cdnLink: 'https://cdn.jsdelivr.net/gh/714Lemons/FlowiseChatEmbed@dev/dist/web.js',
+    chatflowid: '665a4dc9-4d6f-40f9-8285-aa9031b6089d', //Lars Duplikat 1
+    //chatflowid: '9d2ad3ec-bb94-4038-a8e5-fbe09805d3ae', //Lars Duplikat 2
+    apiHost: 'https://ish-flowise-pm.azurewebsites.net',
+    cdnLink: 'https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js',
   },
 };
