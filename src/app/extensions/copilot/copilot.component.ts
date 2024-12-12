@@ -21,6 +21,26 @@ import { InjectSingle } from 'ish-core/utils/injection';
 import { CompareFacade } from '../compare/facades/compare.facade';
 
 import { CopilotFacade } from './facades/copilot.facade';
+import { routerCancelAction } from '@ngrx/router-store';
+
+//Dinge die ich importiere (safe falsch oder nicht benötigt)
+
+@Component({
+  selector: 'app-current-url',
+  templateUrl: './current-url.component.html',
+  styleUrls: ['./current-url.component.css']
+})
+export class CurrentUrlComponent implements OnInit {
+  fullUrl: string = '';
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    // Holen der vollständigen URL
+    this.fullUrl = this.router.url;
+    
+  }
+}
 
 interface ToolCall {
   tool: string;
@@ -29,6 +49,7 @@ interface ToolCall {
     SKU?: string;
     SKUs?: string;
     Products?: string;
+    Page?: string;
   };
 }
 
@@ -96,6 +117,17 @@ export class CopilotComponent implements OnInit, OnDestroy {
     }
 
     switch (toolCall.tool) {
+      case 'language_english':
+        
+        
+        break;
+      case 'open_checkout':
+        
+        this.navigate(`/checkout/address`);
+        break;
+      //case 'open_help_page_specific':
+      //this.navigate(`/page/page.helpdesk/${toolCall.toolInput?.Page}`);
+      //break;
       case 'open_help_page':
         this.navigate('/page/page.helpdesk.pagelet2-Page');
         break;
@@ -126,6 +158,10 @@ export class CopilotComponent implements OnInit, OnDestroy {
         break;
     }
   }
+
+  
+
+ 
 
   private onToolCallEvent(event: Event): void {
     const customEvent = event as CustomEvent;
