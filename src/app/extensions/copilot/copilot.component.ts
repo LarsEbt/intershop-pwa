@@ -26,9 +26,9 @@ import { routerCancelAction } from '@ngrx/router-store';
 //Dinge die ich importiere (safe falsch oder nicht benötigt)
 
 @Component({
-  selector: 'app-current-url',
-  templateUrl: './current-url.component.html',
-  styleUrls: ['./current-url.component.css']
+  selector: 'ish-copilot', // Ändere den Präfix zu 'ish'
+  templateUrl: './copilot.component.html',
+  styleUrls: ['./copilot.component.scss'],
 })
 export class CurrentUrlComponent implements OnInit {
   fullUrl: string = '';
@@ -38,7 +38,6 @@ export class CurrentUrlComponent implements OnInit {
   ngOnInit(): void {
     // Holen der vollständigen URL
     this.fullUrl = this.router.url;
-    
   }
 }
 
@@ -118,11 +117,8 @@ export class CopilotComponent implements OnInit, OnDestroy {
 
     switch (toolCall.tool) {
       case 'language_english':
-        
-        
         break;
       case 'open_checkout':
-        
         this.navigate(`/checkout/address`);
         break;
       //case 'open_help_page_specific':
@@ -158,10 +154,6 @@ export class CopilotComponent implements OnInit, OnDestroy {
         break;
     }
   }
-
-  
-
- 
 
   private onToolCallEvent(event: Event): void {
     const customEvent = event as CustomEvent;
