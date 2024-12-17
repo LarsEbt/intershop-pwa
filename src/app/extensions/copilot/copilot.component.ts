@@ -21,17 +21,16 @@ import { InjectSingle } from 'ish-core/utils/injection';
 import { CompareFacade } from '../compare/facades/compare.facade';
 
 import { CopilotFacade } from './facades/copilot.facade';
-import { routerCancelAction } from '@ngrx/router-store';
 
 //Dinge die ich importiere (safe falsch oder nicht benötigt)
 
 @Component({
-  selector: 'ish-copilot', // Ändere den Präfix zu 'ish'
-  templateUrl: './copilot.component.html',
-  styleUrls: ['./copilot.component.scss'],
+  selector: 'ish-app-copilot',
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrentUrlComponent implements OnInit {
-  fullUrl: string = '';
+  fullUrl = '';
 
   constructor(private router: Router) {}
 
