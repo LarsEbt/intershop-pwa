@@ -115,14 +115,29 @@ export class CopilotComponent implements OnInit, OnDestroy {
     }
 
     switch (toolCall.tool) {
-      case 'language_english':
+      case 'switch_language_english':
+        this.changeLanguageEnglish();
+        console.log('Sprache wurde auf Englisch geändert');
         break;
+      case 'switch_language_german':
+        this.changeLanguageGerman();
+        break;
+      case 'switch_language_french':
+        this.changeLanguageFrench();
+        break;
+      case 'general_tablets ':
+        this.navigate('/computer/tablets-ctgComputers.897');
+        break;
+      case 'general_laptops':
+        this.navigate('/computer/notebooks-und-pcs/notebooks-ctgComputers.1835.151');
+        break;
+      case 'general_computers':
+        this.navigate('/computer/notebooks-und-pcs/pcs-ctgComputers.1835.153');
+        break;
+
       case 'open_checkout':
         this.navigate(`/checkout/address`);
         break;
-      //case 'open_help_page_specific':
-      //this.navigate(`/page/page.helpdesk/${toolCall.toolInput?.Page}`);
-      //break;
       case 'open_help_page':
         this.navigate('/page/page.helpdesk.pagelet2-Page');
         break;
@@ -153,7 +168,18 @@ export class CopilotComponent implements OnInit, OnDestroy {
         break;
     }
   }
-
+  changeLanguageEnglish() {
+    const currentPath = this.router.url;
+    this.navigate(`${currentPath};lang=en_US`);
+  }
+  changeLanguageGerman() {
+    const currentPath = this.router.url;
+    this.navigate(`${currentPath};lang=de_DE`);
+  }
+  changeLanguageFrench() {
+    const currentPath = this.router.url;
+    this.navigate(`${currentPath};lang=fr_FR`);
+  }
   private onToolCallEvent(event: Event): void {
     const customEvent = event as CustomEvent;
     this.handleToolCall(customEvent.detail);
