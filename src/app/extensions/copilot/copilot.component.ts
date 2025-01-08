@@ -120,7 +120,7 @@ export class CopilotComponent implements OnInit, OnDestroy {
         console.log('Sprache wurde auf Englisch geändert');
         break;
       case 'switch_language_german':
-        this.translateService.use('de_DE');
+        this.translateService.use('de_DE'); //Erster Versuch für übersetzung
         break;
       case 'switch_language_french':
         this.changeLanguage('fr');
@@ -168,11 +168,14 @@ export class CopilotComponent implements OnInit, OnDestroy {
         break;
     }
   }
+
+  //zweiter Versuch für übersetzung
   private changeLanguage(lang: string): void {
-    this.translateService.use(lang); // Sprache umstellen
+    this.translateService.use(lang);
     console.log(`Sprache auf ${lang} geändert`);
   }
 
+  //dritter Versuch für übersetzung (aber nicht so gut, funktioniert einmal)
   // changeLanguageEnglish() {
   //   const currentPath = this.router.url.split(';')[0];
   //   this.navigate(`${currentPath};lang=en_US`);
