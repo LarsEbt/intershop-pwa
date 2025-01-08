@@ -10,7 +10,7 @@ import {
   RendererFactory2,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 
@@ -74,8 +74,7 @@ export class CopilotComponent implements OnInit, OnDestroy {
     private copilotFacade: CopilotFacade,
     private compareFacade: CompareFacade,
     private shoppingFacade: ShoppingFacade,
-    private translateService: TranslateService,
-    private translateModule: TranslateModule
+    private translateService: TranslateService
   ) {
     this.renderer = rendererFactory.createRenderer(undefined, undefined);
   }
@@ -117,10 +116,10 @@ export class CopilotComponent implements OnInit, OnDestroy {
 
     switch (toolCall.tool) {
       case 'switch_language_english':
-        console.log('Sprache wurde auf Englisch geändert');
+        this.changeLanguage('en');
         break;
       case 'switch_language_german':
-        this.translateService.use('de_DE'); //Erster Versuch für übersetzung
+        this.changeLanguage('DE');
         break;
       case 'switch_language_french':
         this.changeLanguage('fr');
@@ -169,13 +168,13 @@ export class CopilotComponent implements OnInit, OnDestroy {
     }
   }
 
-  //zweiter Versuch für übersetzung
-  private changeLanguage(lang: string): void {
+  //Erster Versuch für übersetzung
+  changeLanguage(lang: string) {
     this.translateService.use(lang);
-    console.log(`Sprache auf ${lang} geändert`);
+    // .subscribe(() => { console.log(`Sprache erfolgreich auf ${lang} geändert`); });
   }
 
-  //dritter Versuch für übersetzung (aber nicht so gut, funktioniert einmal)
+  //Zweiter Versuch für übersetzung (aber nicht so gut, funktioniert nur einmal)
   // changeLanguageEnglish() {
   //   const currentPath = this.router.url.split(';')[0];
   //   this.navigate(`${currentPath};lang=en_US`);
