@@ -10,6 +10,7 @@ import {
   RendererFactory2,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 
@@ -22,14 +23,8 @@ import { CompareFacade } from '../compare/facades/compare.facade';
 
 import { CopilotFacade } from './facades/copilot.facade';
 
-//Dinge die ich importiere (safe falsch oder nicht benötigt)
-// import { TranslateService } from '@ngx-translate/core';
-// import { TranslateModule } from '@ngx-translate/core';
-
 @Component({
   selector: 'ish-app-copilot',
-  standalone: true,
-  // imports: [TranslateModule],
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -78,10 +73,11 @@ export class CopilotComponent implements OnInit, OnDestroy {
     private router: Router,
     private copilotFacade: CopilotFacade,
     private compareFacade: CompareFacade,
-    private shoppingFacade: ShoppingFacade // private translateService: TranslateService
+    private shoppingFacade: ShoppingFacade,
+    private translateService: TranslateService,
+    private translateModule: TranslateModule
   ) {
     this.renderer = rendererFactory.createRenderer(undefined, undefined);
-    // this.translateService.addLangs(['de', 'en', 'fr']);
   }
 
   private get window(): Window {
@@ -121,23 +117,22 @@ export class CopilotComponent implements OnInit, OnDestroy {
 
     switch (toolCall.tool) {
       case 'switch_language_english':
-        this.changeLanguageEnglish();
         console.log('Sprache wurde auf Englisch geändert');
         break;
       case 'switch_language_german':
-        // this.translateService.use('de');
+        this.translateService.use('de_DE');
         break;
       case 'switch_language_french':
-        // this.translateService.use('fr');
+        this.changeLanguage('fr');
         break;
       case 'general_tablets ':
-        this.navigate('/computer/tablets-ctgComputers.897');
+        this.navigate('/computer/tablets-ctgComputers.897'); //hier auch
         break;
       case 'general_laptops':
-        this.navigate('/computer/notebooks-und-pcs/notebooks-ctgComputers.1835.151');
+        this.navigate('/computer/notebooks-und-pcs/notebooks-ctgComputers.1835.151'); //hier Moritz fragen wegen Link
         break;
       case 'general_computers':
-        this.navigate('/computer/notebooks-und-pcs/pcs-ctgComputers.1835.153');
+        this.navigate('/computer/notebooks-und-pcs/pcs-ctgComputers.1835.153'); //hier auch
         break;
 
       case 'open_checkout':
@@ -173,21 +168,24 @@ export class CopilotComponent implements OnInit, OnDestroy {
         break;
     }
   }
-  // useLanguage(language: string): void {
-  //this.translate.use(language);
-  //}
-  changeLanguageEnglish() {
-    const currentPath = this.router.url;
-    this.navigate(`${currentPath};lang=en_US`);
+  private changeLanguage(lang: string): void {
+    this.translateService.use(lang); // Sprache umstellen
+    console.log(`Sprache auf ${lang} geändert`);
   }
-  changeLanguageGerman() {
-    const currentPath = this.router.url;
-    this.navigate(`${currentPath};lang=de_DE`);
-  }
-  changeLanguageFrench() {
-    const currentPath = this.router.url;
-    this.navigate(`${currentPath};lang=fr_FR`);
-  }
+
+  // changeLanguageEnglish() {
+  //   const currentPath = this.router.url.split(';')[0];
+  //   this.navigate(`${currentPath};lang=en_US`);
+  // }
+  // changeLanguageGerman() {
+  //   const currentPath = this.router.url.split(';')[0];
+  //   this.navigate(`${currentPath};lang=de_DE`);
+  // }
+  // changeLanguageFrench() {
+  //   const currentPath = this.router.url.split(';')[0];
+  //   this.navigate(`${currentPath};lang=fr_FR`);
+  // }
+
   private onToolCallEvent(event: Event): void {
     const customEvent = event as CustomEvent;
     this.handleToolCall(customEvent.detail);
