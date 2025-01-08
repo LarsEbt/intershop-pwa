@@ -23,9 +23,13 @@ import { CompareFacade } from '../compare/facades/compare.facade';
 import { CopilotFacade } from './facades/copilot.facade';
 
 //Dinge die ich importiere (safe falsch oder nicht benötigt)
+// import { TranslateService } from '@ngx-translate/core';
+// import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'ish-app-copilot',
+  standalone: true,
+  // imports: [TranslateModule],
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -74,9 +78,10 @@ export class CopilotComponent implements OnInit, OnDestroy {
     private router: Router,
     private copilotFacade: CopilotFacade,
     private compareFacade: CompareFacade,
-    private shoppingFacade: ShoppingFacade
+    private shoppingFacade: ShoppingFacade // private translateService: TranslateService
   ) {
     this.renderer = rendererFactory.createRenderer(undefined, undefined);
+    // this.translateService.addLangs(['de', 'en', 'fr']);
   }
 
   private get window(): Window {
@@ -120,10 +125,10 @@ export class CopilotComponent implements OnInit, OnDestroy {
         console.log('Sprache wurde auf Englisch geändert');
         break;
       case 'switch_language_german':
-        this.changeLanguageGerman();
+        // this.translateService.use('de');
         break;
       case 'switch_language_french':
-        this.changeLanguageFrench();
+        // this.translateService.use('fr');
         break;
       case 'general_tablets ':
         this.navigate('/computer/tablets-ctgComputers.897');
@@ -168,6 +173,9 @@ export class CopilotComponent implements OnInit, OnDestroy {
         break;
     }
   }
+  // useLanguage(language: string): void {
+  //this.translate.use(language);
+  //}
   changeLanguageEnglish() {
     const currentPath = this.router.url;
     this.navigate(`${currentPath};lang=en_US`);
